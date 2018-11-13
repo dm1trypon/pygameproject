@@ -5,37 +5,34 @@ import pygame
 
 from const import *
 from pygame import *
-from level import level
+from key_events import Keys
+from level import Level
+from player import Player
 
-def draw_map(screen):
-    x=y=0
-    for row in level:
-        for col in row:
-            if col == "-":
-                pf = Surface((PLATFORM_WIDTH, PLATFORM_HEIGHT))
-                pf.fill(Color(PLATFORM_COLOR)) 
-                screen.blit(pf,(x,y))
-                        
-            x += PLATFORM_WIDTH
-        y += PLATFORM_HEIGHT
-        x = 0 
+clock = pygame.time.Clock()
 
 def main():
+    
     pygame.init()
     screen = pygame.display.set_mode(DISPLAY)
-    pygame.display.set_caption("PyGame")
+    pygame.display.set_caption(DESCRIPTION_GAME)
     bg = Surface((WIN_WIDTH, WIN_HEIGHT))
-
     bg.fill(Color(BACKGROUND_COLOR))
+    player = Player(100, 100, "Player", PLAYER_COLOR)
+    keys = Keys()
+    level = Level(LEVEL_WIDTH, LEVEL_HEIGHT)
+    while True:
+        player.create(screen)
+        e = pygame.event.poll()
+        if e.type == pygame.QUIT:
+            return
 
-    while 1:
-        for e in pygame.event.get():
-            if e.type == QUIT:
-                raise SystemExit
-        screen.blit(bg, (0,0)) 
+        keys.key_events(player)
         pygame.display.update()
-        draw_map(screen)
-        
+        screen.blit(bg, (0, 0))
+        level.draw_map(screen)
+        clock.tick(FPS)
+
 
 if __name__ == "__main__":
     main()
