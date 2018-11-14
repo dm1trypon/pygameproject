@@ -4,37 +4,37 @@ from pygame import *
 from const import *
 
 class Keys:
-    def key_events(self, player):
+    def key_events(self, obj):
         press = False
         keys = pygame.key.get_pressed()
         if keys[pygame.K_s] and keys[pygame.K_d] and not press:
-            player.move(DOWN_RIGHT)
+            obj.move(DOWN_RIGHT)
             press = True
 
         if keys[pygame.K_s] and keys[pygame.K_a] and not press:
-            player.move(DOWN_LEFT)
+            obj.move(DOWN_LEFT)
             press = True
 
         if keys[pygame.K_w] and keys[pygame.K_d] and not press:
-            player.move(UP_RIGHT)
+            obj.move(UP_RIGHT)
             press = True
 
         if keys[pygame.K_w] and keys[pygame.K_a] and not press:
-            player.move(UP_LEFT)
+            obj.move(UP_LEFT)
             press = True
 
         if keys[pygame.K_a] and not press :
-            player.move(LEFT)
+            obj.move(LEFT)
             press = True
 
         if keys[pygame.K_d] and not press:
-            player.move(RIGHT)
+            obj.move(RIGHT)
             press = True
 
         if keys[pygame.K_w] and not press:
-            player.move(UP)
+            obj.move(UP)
             press = True
 
         if keys[pygame.K_s] and not press:
-            player.move(DOWN)
+            obj.move(DOWN)
             press = True

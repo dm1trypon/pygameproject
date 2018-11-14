@@ -11,6 +11,7 @@ from level import Level
 from player import Player
 from bullet import Bullet
 from objects import Objects
+from camera import Camera
 
 clock = pygame.time.Clock()
 
@@ -23,6 +24,7 @@ class Main:
         self.keys = Keys()
         self.objects = Objects(self.nick_name)
         self.level = Level(LEVEL_WIDTH, LEVEL_HEIGHT)
+        self.camera = Camera(100, 100, self.nick_name)
 
     def add_bullet(self, mouse_click):
         return Bullet(self.player.get(POS_X),
@@ -45,7 +47,8 @@ class Main:
             if e.type == pygame.QUIT:
                 return
 
-            self.keys.key_events(self.player)
+            # self.keys.key_events(self.player)
+            self.keys.key_events(self.camera)
             pygame.display.update()
             self.screen.blit(self.bg, (0, 0))
             self.level.draw_map(self.screen)

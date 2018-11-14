@@ -2,11 +2,13 @@ import pygame
 
 from const import *
 from pygame import *
+from objects import Objects
 
 class Level:
     def __init__(self, width, height):
         self.width_level = width
         self.height_level = height
+        self.objects = Objects()
         
     def generate_level(self):
         level = []
@@ -49,7 +51,8 @@ class Level:
             for col in row:
                 if col == BLOCK:
                     pf = Surface((PLATFORM_WIDTH, PLATFORM_HEIGHT))
-                    pf.fill(Color(PLATFORM_COLOR)) 
+                    self.objects.set_add_pf(pf)
+                    pf.fill(Color(PLATFORM_COLOR))
                     screen.blit(pf, (x, y))
                             
                 x += PLATFORM_WIDTH
