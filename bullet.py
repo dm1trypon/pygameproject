@@ -2,12 +2,12 @@ import pygame
 
 from const import *
 from pygame import *
-from link import Link
 from math import sqrt, exp
 from collision import Screen
+from objects import Objects
 
 class Bullet:
-    def __init__(self, pos_x, pos_y, mouse_click, name, id_bullet, color):
+    def __init__(self, pos_x, pos_y, mouse_click, name, bullet_id, color):
         self.position_x = pos_x
         self.position_y = pos_y
         self.bullet_name = name
@@ -18,9 +18,8 @@ class Bullet:
         self.speed_x = self.get_speed()[X]
         self.speed_y = self.get_speed()[Y]
         self.screen = Screen()
-        self.link = Link()
-        self.id_bullet = id_bullet
-        self.main = self.link.get()
+        self.bullet_id = bullet_id
+        self.objects = Objects(name)
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.bullet_color, (self.position_x, self.position_y), BULLET_RADIUS)
@@ -41,7 +40,7 @@ class Bullet:
 
     def move(self):
         if not self.screen.on_screen(self.position_x, self.position_y):
-            self.main.set_objects(self.id_bullet)
+            self.objects.set_del(self.bullet_id)
             return
 
         self.position_x += int(self.speed_x)

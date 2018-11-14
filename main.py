@@ -10,58 +10,54 @@ from key_events import Keys
 from level import Level
 from player import Player
 from bullet import Bullet
+from objects import Objects
 
 clock = pygame.time.Clock()
 
-def singleton(class_):
-    instances = {}
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-    return getinstance
-
-@singleton
 class Main:
     def __init__(self):
         self.nick_name = "Player"
-        self.bullets = []
+        self.screen = pygame.display.set_mode(DISPLAY)
+        self.bg = Surface((WIN_WIDTH, WIN_HEIGHT))
         self.player = Player(100, 100, self.nick_name, PLAYER_COLOR)
+        self.keys = Keys()
+        self.objects = Objects(self.nick_name)
+        self.level = Level(LEVEL_WIDTH, LEVEL_HEIGHT)
 
-    def get_objects(self, mouse_click):
-        id_bullet = self.nick_name + str(random.randint(1, 1000))
-        self.bullets.append(Bullet(self.player.get(POS_X), self.player.get(POS_Y), mouse_click, self.player.get(NAME), id_bullet, BULLET_COLOR))
+    def add_bullet(self, mouse_click):
+        return Bullet(self.player.get(POS_X),
+                    self.player.get(POS_Y),
+                    mouse_click, self.player.get(NAME),
+                    self.objects.get_id(),
+                    BULLET_COLOR)
 
-    def set_objects(self, id_bullet):
-        self.bullets.remove(id_bullet)
-
-    def main(self):
-        pygame.init()
-        screen = pygame.display.set_mode(DISPLAY)
-        pygame.display.set_caption(DESCRIPTION_GAME)
-        bg = Surface((WIN_WIDTH, WIN_HEIGHT))
-        bg.fill(Color(BACKGROUND_COLOR))
-        keys = Keys()
-        level = Level(LEVEL_WIDTH, LEVEL_HEIGHT)
+    def animation(self):
         while True:
             pressed = pygame.mouse.get_pressed()
             if pressed[0]:
-                mouse_click = pygame.mouse.get_pos()
-                self.get_objects(mouse_click)
+                self.objects.set_add(self.add_bullet(pygame.mouse.get_pos()))
 
-            for obj in self.bullets:
-                obj.draw(screen)
+            for obj in self.objects.get_bullets():
+                obj.draw(self.screen)
 
-            self.player.draw(screen)
+            self.player.draw(self.screen)
             e = pygame.event.poll()
             if e.type == pygame.QUIT:
                 return
 
-            keys.key_events(self.player)
+            self.keys.key_events(self.player)
             pygame.display.update()
-            screen.blit(bg, (0, 0))
-            level.draw_map(screen)
+            self.screen.blit(self.bg, (0, 0))
+            self.level.draw_map(self.screen)
             clock.tick(FPS)
+
+    def main(self):
+        pygame.init()
+        pygame.display.set_caption(DESCRIPTION_GAME)
+        bg = Surface((WIN_WIDTH, WIN_HEIGHT))
+        bg.fill(Color(BACKGROUND_COLOR))
+        self.level = Level(LEVEL_WIDTH, LEVEL_HEIGHT)
+        self.animation()
 
 
 if __name__ == "__main__":

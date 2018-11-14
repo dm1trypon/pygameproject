@@ -32,3 +32,5 @@ SPACE = " "
 TRIANGLE_RULE = 2 / 3
 X = 0
 Y = 1
+RAND_FROM = 1
+RAND_TO = 1000
