@@ -12,14 +12,15 @@ def singleton(class_):
 
 @singleton
 class Objects:
-    def __init__(self, name):
+    def __init__(self, nick_name):
         self.bullets = []
-        self.pf_list = []
+        self.borders = []
         self.enemy_players = []
-        self.nick_name = name
+        self.collision = None
+        self.nick_name = nick_name
 
-    def get_pf_list(self):
-        return self.pf_list
+    def get_borders(self):
+        return self.borders
 
     def get_enemy_players(self):
         return self.enemy_players
@@ -30,16 +31,22 @@ class Objects:
     def get_id(self):
         return self.nick_name + str(random.randint(RAND_FROM, RAND_TO))
 
+    def get_collision(self):
+        return self.collision
+
+    def set_collision(self, collision):
+        self.collision = collision
+
     def set_add_enemy_players(self, enemy_player):
         self.enemy_players.append(enemy_player)
 
-    def set_add(self, bullet):
+    def set_add_bullet(self, bullet):
         self.bullets.append(bullet)
 
-    def set_add_pf(self, pf):
-        self.pf_list.append(pf)
-        
-    def set_del(self, bullet_id):
+    def set_add_border(self, border):
+        self.borders.append(border)
+
+    def set_del_bullet(self, bullet_id):
         for item in self.bullets:
             if item.bullet_id == bullet_id:
                 self.bullets.remove(item)

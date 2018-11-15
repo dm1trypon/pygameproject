@@ -2,13 +2,25 @@ import pygame
 
 from const import *
 from pygame import *
+from border import Border
 from objects import Objects
 
+def singleton(class_):
+    instances = {}
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance
+
+@singleton
 class Level:
-    def __init__(self, width, height):
+    def __init__(self, width, height, nick_name, screen):
+        self.objects = Objects(nick_name)
+        self.point_xy = 0
         self.width_level = width
         self.height_level = height
-        self.objects = Objects()
+        self.generate_map(screen)
         
     def generate_level(self):
         level = []
@@ -36,6 +48,9 @@ class Level:
 
         return line
 
+    def set_point_xy(self, point_xy):
+        self.point_xy = point_xy
+
     def get_line_minus(self):
         line = ""
         i = 0
@@ -45,16 +60,17 @@ class Level:
 
         return line
 
-    def draw_map(self, screen):
+    def generate_map(self, screen):
         x = y = 0
         for row in self.generate_level():
             for col in row:
                 if col == BLOCK:
-                    pf = Surface((PLATFORM_WIDTH, PLATFORM_HEIGHT))
-                    self.objects.set_add_pf(pf)
-                    pf.fill(Color(PLATFORM_COLOR))
-                    screen.blit(pf, (x, y))
-                            
+                        self.objects.set_add_border(Border(screen, x, y))
+
                 x += PLATFORM_WIDTH
             y += PLATFORM_HEIGHT
-            x = 0    
+            x = 0
+
+    def draw(self):
+        for obj in self.objects.get_borders():
+            obj.draw()
