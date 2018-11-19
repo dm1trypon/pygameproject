@@ -12,6 +12,7 @@ from player import Player
 from bullet import Bullet
 from objects import Objects
 from camera import Camera
+from collision import Collision
 
 clock = pygame.time.Clock()
 
@@ -22,18 +23,24 @@ class Main:
         self.bg = Surface((WIN_WIDTH, WIN_HEIGHT))
         self.player = Player(int(WIN_WIDTH / 2), int(WIN_HEIGHT / 2), self.nick_name, PLAYER_COLOR)
         self.keys = Keys()
-        self.objects = Objects(self.nick_name)
-        self.level = Level(LEVEL_WIDTH, LEVEL_HEIGHT, self.nick_name, self.screen)
-        self.camera = Camera(int(WIN_WIDTH / 2), int(WIN_HEIGHT / 2), self.nick_name)
-        self.objects.set_collision(self.camera)
+
+        self.objects = Objects()
+        self.objects.set_nick_name(self.nick_name)
+
+        self.level = Level(LEVEL_WIDTH, LEVEL_HEIGHT, self.objects, self.screen)
+        self.camera = Camera(int(WIN_WIDTH / 2), int(WIN_HEIGHT / 2), self.objects)
+        
+
 
     def add_bullet(self, mouse_click):
-        return Bullet(self.player.get(POS_X),
+        bullet = Bullet(self.player.get(POS_X),
                     self.player.get(POS_Y),
                     mouse_click, self.player.get(NAME),
                     self.objects.get_id(),
-                    BULLET_COLOR)
+                    BULLET_COLOR, self.objects)
 
+        return bullet
+        
     def animation(self):
         while True:
             pressed = pygame.mouse.get_pressed()

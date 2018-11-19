@@ -12,12 +12,11 @@ def singleton(class_):
 
 @singleton
 class Objects:
-    def __init__(self, nick_name):
+    def __init__(self):
         self.bullets = []
         self.borders = []
         self.enemy_players = []
-        self.collision = None
-        self.nick_name = nick_name
+        self.nick_name = None
 
     def get_borders(self):
         return self.borders
@@ -31,11 +30,8 @@ class Objects:
     def get_id(self):
         return self.nick_name + str(random.randint(RAND_FROM, RAND_TO))
 
-    def get_collision(self):
-        return self.collision
-
-    def set_collision(self, collision):
-        self.collision = collision
+    def set_nick_name(self, nick_name):
+        self.nick_name = nick_name
 
     def set_add_enemy_players(self, enemy_player):
         self.enemy_players.append(enemy_player)

@@ -15,8 +15,8 @@ def singleton(class_):
 
 @singleton
 class Level:
-    def __init__(self, width, height, nick_name, screen):
-        self.objects = Objects(nick_name)
+    def __init__(self, width, height, objects, screen):
+        self.objects = objects
         self.point_xy = 0
         self.width_level = width
         self.height_level = height
@@ -61,15 +61,15 @@ class Level:
         return line
 
     def generate_map(self, screen):
-        x = y = 0
+        position_x = position_y = 0
         for row in self.generate_level():
             for col in row:
                 if col == BLOCK:
-                        self.objects.set_add_border(Border(screen, x, y))
+                    self.objects.set_add_border(Border(screen, position_x, position_y, self.objects.get_id(), self.objects))
 
-                x += PLATFORM_WIDTH
-            y += PLATFORM_HEIGHT
-            x = 0
+                position_x += PLATFORM_WIDTH
+            position_y += PLATFORM_HEIGHT
+            position_x = 0
 
     def draw(self):
         for obj in self.objects.get_borders():

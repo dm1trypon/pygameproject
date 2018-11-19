@@ -3,45 +3,46 @@ import pygame
 from const import *
 from pygame import *
 from math import sqrt, exp
-from collision import Screen
+from collision import Collision
 from objects import Objects
 
 class Bullet:
-    def __init__(self, pos_x, pos_y, mouse_click, nick_name, bullet_id, color):
-        self.position_x = pos_x
-        self.position_y = pos_y
+    def __init__(self, position_x, position_y, mouse_click, nick_name, bullet_id, color, objects):
+        self.position_x = position_x
+        self.position_y = position_y
         self.bullet_name = nick_name
         self.bullet_color = color
         self.bullet_speed = BULLET_SPEED
         self.player_speed = PLAYER_SPEED
-        self.to_x = mouse_click[X]
-        self.to_y = mouse_click[Y]
+        self.mouse_click_x = mouse_click[X]
+        self.mouse_click_y = mouse_click[Y]
         self.speed_x = self.get_speed()[X]
         self.speed_y = self.get_speed()[Y]
         self.bullet_id = bullet_id
-        self.screen = Screen(nick_name, pos_x, pos_y, self.bullet_id)
-        self.objects = Objects(nick_name)
+        self.objects = objects
+        self.collision = Collision()
+        
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.bullet_color, (self.position_x, self.position_y), BULLET_RADIUS)
         self.move()
 
     def get_speed(self):
-        speed_x = ((self.to_x - self.position_x)
+        speed_x = ((self.mouse_click_x - self.position_x)
                     * self.bullet_speed
-                    / sqrt((self.to_x - self.position_x) ** 2
-                    + (self.to_y - self.position_y) ** 2))
+                    / sqrt((self.mouse_click_x - self.position_x) ** 2
+                    + (self.mouse_click_y - self.position_y) ** 2))
 
-        speed_y = ((self.to_y - self.position_y)
+        speed_y = ((self.mouse_click_y - self.position_y)
                     * self.bullet_speed
-                    / sqrt((self.to_x - self.position_x) ** 2
-                    + (self.to_y - self.position_y) ** 2))
+                    / sqrt((self.mouse_click_x - self.position_x) ** 2
+                    + (self.mouse_click_y - self.position_y) ** 2))
 
         return (speed_x, speed_y)
 
     def move(self):
         print("Move bullet id: ", self.bullet_id, ", pos_x = ", self.position_x, ", pos_y = ", self.position_y)
-        if not self.screen.on_screen(self.position_x, self.position_y):
+        if not self.collision.on_screen(self.position_x, self.position_y):
             print("Delete bullet id: ", self.bullet_id)
             self.objects.set_del_bullet(self.bullet_id)
             return
